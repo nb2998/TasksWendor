@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">TaskWendor</string>
+    <string name="basic_url">http://wendor.in/internships/mock.json</string>
+    <string name="error_failed_to_fetch">Failed to fetch</string>
+</resources>
