@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.nb2998.taskwendor.Adapters.ItemsBelowAdapter;
 import com.example.nb2998.taskwendor.Database.DBHelper;
 import com.example.nb2998.taskwendor.Fragments.FragmentAbove;
 import com.example.nb2998.taskwendor.Fragments.FragmentBelow;
@@ -21,7 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements FragmentBelow.ItemClicked {
+public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter.ItemClicked {
 
     public ArrayList<SingleItem> itemsArrayList;
     DBHelper dbHelper;

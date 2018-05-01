@@ -23,25 +23,9 @@ import java.util.ArrayList;
 public class FragmentBelow extends Fragment {
 
     ItemsBelowAdapter itemsBelowAdapter;
-    int selected = 0;
-    ItemClicked callback;
 
     public FragmentBelow() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try{
-            callback= (ItemClicked) context;
-        } catch (ClassCastException e){
-            throw new ClassCastException();
-        }
-    }
-
-    public void sendToCallback(){
-        callback.changeTextInFragmentAbove(selected);
     }
 
     @Override
@@ -59,18 +43,8 @@ public class FragmentBelow extends Fragment {
         View view = inflater.inflate(R.layout.fragment_below, container, false);
         RecyclerView recViewItems = view.findViewById(R.id.rec_view_items);
         recViewItems.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        itemsBelowAdapter = new ItemsBelowAdapter(getContext(),FragmentBelow.this);
+        itemsBelowAdapter = new ItemsBelowAdapter(getContext());
         recViewItems.setAdapter(itemsBelowAdapter);
         return view;
-    }
-
-    public interface ItemClicked{
-        void changeTextInFragmentAbove(int selected);
-    }
-
-    @Override
-    public void onDetach() {
-        callback=null;
-        super.onDetach();
     }
 }

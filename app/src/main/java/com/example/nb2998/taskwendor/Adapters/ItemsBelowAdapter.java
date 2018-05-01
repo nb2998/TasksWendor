@@ -24,13 +24,13 @@ public class ItemsBelowAdapter extends RecyclerView.Adapter<ItemsBelowAdapter.It
 
     Context context;
     ArrayList<SingleItem> itemArrayList;
-    FragmentBelow fragmentBelow;
+    ItemClicked callback;
     int selected = 0;
 
-    public ItemsBelowAdapter(Context context, FragmentBelow fragmentBelow) {
+    public ItemsBelowAdapter(Context context) {
         this.context = context;
         itemArrayList = (new DBHelper(context)).readItemsFromDb();
-        this.fragmentBelow=fragmentBelow;
+        callback = (ItemClicked) context;
     }
 
     @NonNull
@@ -59,7 +59,7 @@ public class ItemsBelowAdapter extends RecyclerView.Adapter<ItemsBelowAdapter.It
             public void onClick(View v) {
                 selected=position;
                 notifyDataSetChanged();
-                fragmentBelow.sendToCallback();
+                sendToCallback();
             }
         });
     }
@@ -73,12 +73,26 @@ public class ItemsBelowAdapter extends RecyclerView.Adapter<ItemsBelowAdapter.It
         TextView tv_name_item_list;
         ImageView iv_img_item_list;
         LinearLayout ll_single_item;
-        public ItemHolder(View itemView) {
+        ItemHolder(View itemView) {
             super(itemView);
             iv_img_item_list = itemView.findViewById(R.id.iv_img_item_list);
             tv_name_item_list = itemView.findViewById(R.id.tv_name_item_list);
             ll_single_item = itemView.findViewById(R.id.ll_single_item);
         }
+    }
+
+    public void sendToCallback(){
+        callback.changeTextInFragmentAbove(selected);
+    }
+
+    public interface ItemClicked{
+        void changeTextInFragmentAbove(int selected);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
+        callback=null;
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 }
 

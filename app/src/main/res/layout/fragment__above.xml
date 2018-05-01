@@ -7,16 +7,18 @@
 
     <ImageButton
         android:id="@+id/btn_Swipe_Left"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="49dp"
+        android:adjustViewBounds="true"
         android:contentDescription="swipe_left"
-        android:src="@android:drawable/btn_star_big_off"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="64dp" />
+        android:scaleType="centerInside"
+        android:src="@drawable/backward"
+        android:layout_marginLeft="49dp"
+        android:layout_alignParentLeft="true" />
 
     <LinearLayout
         android:layout_width="200dp"
@@ -33,7 +35,9 @@
             android:text="@string/item_details"
             android:layout_gravity="center_horizontal"
             android:layout_margin="5dp"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            android:textAllCaps="true"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/tv_name_item_details"
@@ -86,14 +90,16 @@
 
     <ImageButton
         android:id="@+id/btn_Swipe_Right"
-        android:layout_width="20dp"
-        android:layout_height="16dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="49dp"
+        android:adjustViewBounds="true"
         android:contentDescription="swipe_right"
-        android:src="@android:drawable/btn_star_big_off"
+        android:scaleType="centerInside"
+        android:src="@drawable/right_arrow"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="64dp" />
+        android:layout_marginRight="49dp" />
 
 </RelativeLayout>
