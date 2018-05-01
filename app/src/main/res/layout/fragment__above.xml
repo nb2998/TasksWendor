@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/btn_Swipe_Left"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="64dp"
+        android:contentDescription="swipe_left"
+        android:src="@android:drawable/btn_star_big_off"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="64dp" />
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@android:color/holo_green_light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/item_details"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_name_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Item Name"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_price_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Item Price"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_tot_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Item Total units"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_left_item_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Item Left units"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:textColor="@android:color/black"/>
+
+        <Button
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/add_to_cart"
+            android:background="@android:color/holo_blue_bright"
+            android:padding="5dp"
+            android:textColor="@android:color/black"/>
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_Swipe_Right"
+        android:layout_width="20dp"
+        android:layout_height="16dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="64dp"
+        android:contentDescription="swipe_right"
+        android:src="@android:drawable/btn_star_big_off"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="64dp" />
+
+</RelativeLayout>

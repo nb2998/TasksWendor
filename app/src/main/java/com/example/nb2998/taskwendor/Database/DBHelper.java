@@ -57,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)),
                     cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_UNITS)),
                     cursor.getInt(cursor.getColumnIndex(COLUMN_LEFT_UNITS)),
-                    cursor.getFloat(cursor.getColumnIndex(COLUMN_PRICE)))));
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE)))));
         }
         sqLiteDatabase.close();
         return itemArrayList;

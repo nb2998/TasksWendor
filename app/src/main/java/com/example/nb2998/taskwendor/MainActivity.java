@@ -1,11 +1,13 @@
 package com.example.nb2998.taskwendor;
 
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.nb2998.taskwendor.Database.DBHelper;
+import com.example.nb2998.taskwendor.Fragments.FragmentAbove;
+import com.example.nb2998.taskwendor.Fragments.FragmentBelow;
 import com.example.nb2998.taskwendor.Models.Items;
 import com.example.nb2998.taskwendor.Models.SingleItem;
 import com.google.gson.Gson;
@@ -19,18 +21,29 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements FragmentBelow.ItemClicked {
 
     public ArrayList<SingleItem> itemsArrayList;
     DBHelper dbHelper;
+//    LinearLayout l_layout_above, l_layout_below;
+//    ScrollView scroll_view_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        l_layout_above = findViewById(R.id.l_layout_above);
+//        l_layout_below = findViewById(R.id.l_layout_below);
+
         dbHelper = new DBHelper(this);
         itemsArrayList = dbHelper.readItemsFromDb();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if(itemsArrayList==null || itemsArrayList.size()==0) {
             try {
                 itemsArrayList = new ArrayList<>();
@@ -38,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else{
+            itemsArrayList = dbHelper.readItemsFromDb();
+            addFragments();
         }
     }
 
@@ -56,8 +72,38 @@ public class MainActivity extends AppCompatActivity {
                 Items items = gson.fromJson(response.body().string(), Items.class);
                 itemsArrayList.addAll(items.getItems());
                 dbHelper.insertItemsIntoDb(itemsArrayList);
+
+                android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                FragmentAbove fragmentAbove = new FragmentAbove();
+                fragmentTransaction.add(R.id.container_above, fragmentAbove);
+                fragmentTransaction.commit();
+
+//                Bundle bundle = new Bundle();
+//                bundle.put
+                addFragments();
             }
         });
 
+    }
+
+    private void addFragments(){
+        android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        FragmentAbove fragmentAbove = new FragmentAbove();
+        fragmentTransaction.add(R.id.container_above, fragmentAbove);
+        fragmentTransaction.commit();
+
+        android.support.v4.app.FragmentManager fm1 = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction1 = fm.beginTransaction();
+        FragmentBelow fragmentBelow = new FragmentBelow();
+        fragmentTransaction1.add(R.id.container_below, fragmentBelow);
+        fragmentTransaction1.commit();
+    }
+
+    @Override
+    public void changeTextInFragmentAbove(int selected) {
+        FragmentAbove fragmentAbove = (FragmentAbove) getSupportFragmentManager().findFragmentById(R.id.container_above);
+        fragmentAbove.updateDetails(selected);
     }
 }
