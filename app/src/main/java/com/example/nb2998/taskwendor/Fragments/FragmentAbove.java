@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.nb2998.taskwendor.Database.DBHelper;
+import com.example.nb2998.taskwendor.Models.Cart;
 import com.example.nb2998.taskwendor.Models.SingleItem;
 import com.example.nb2998.taskwendor.R;
 
@@ -18,10 +20,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentAbove extends Fragment {
+public class FragmentAbove extends Fragment implements View.OnClickListener {
 
     TextView tv_name_item_details, tv_price_item_details, tv_tot_item_details, tv_left_item_details;
+    Button btnAddToCart;
     ArrayList<SingleItem> itemArrayList;
+    int selected;
 
     public FragmentAbove() {
         // Required empty public constructor
@@ -38,18 +42,35 @@ public class FragmentAbove extends Fragment {
         tv_price_item_details = view.findViewById(R.id.tv_price_item_details);
         tv_tot_item_details = view.findViewById(R.id.tv_tot_item_details);
         tv_left_item_details = view.findViewById(R.id.tv_left_item_details);
+        btnAddToCart = view.findViewById(R.id.btn_add_to_cart);
 
-        tv_name_item_details.setText("Name: "+itemArrayList.get(0).getName());
-        tv_price_item_details.setText("Price: "+itemArrayList.get(0).getPrice());
-        tv_tot_item_details.setText("Total units: "+itemArrayList.get(0).getTot_units());
-        tv_left_item_details.setText("Left units: "+itemArrayList.get(0).getLeft_units());
+        tv_name_item_details.setText(new StringBuilder().append(getString(R.string.name)).append(itemArrayList.get(0).getName()).toString());
+        tv_price_item_details.setText(new StringBuilder().append(getString(R.string.price)).append(itemArrayList.get(0).getPrice()).toString());
+        tv_tot_item_details.setText(new StringBuilder().append(getString(R.string.total_units)).append(itemArrayList.get(0).getTot_units()).toString());
+        tv_left_item_details.setText(new StringBuilder().append(getString(R.string.left_units)).append(itemArrayList.get(0).getLeft_units()).toString());
+
+        btnAddToCart.setOnClickListener(this);
         return view;
     }
 
     public void updateDetails(int selected){
-        tv_name_item_details.setText("Name: "+itemArrayList.get(selected).getName());
-        tv_price_item_details.setText("Price: "+itemArrayList.get(selected).getPrice());
-        tv_tot_item_details.setText("Total units: "+itemArrayList.get(selected).getTot_units());
-        tv_left_item_details.setText("Left units: "+itemArrayList.get(selected).getLeft_units());
+        this.selected=selected;
+        tv_name_item_details.setText(new StringBuilder().append(getString(R.string.name)).append(itemArrayList.get(selected).getName()).toString());
+        tv_price_item_details.setText(new StringBuilder().append(getString(R.string.price)).append(itemArrayList.get(selected).getPrice()).toString());
+        tv_tot_item_details.setText(new StringBuilder().append(getString(R.string.total_units)).append(itemArrayList.get(selected).getTot_units()).toString());
+        tv_left_item_details.setText(new StringBuilder().append(getString(R.string.left_units)).append(itemArrayList.get(selected).getLeft_units()).toString());
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.btn_add_to_cart){
+            Cart cart = Cart.getInstance();
+            if(cart!=null){
+                Log.d("TAG", "onClick: "+cart.getTotalPrice());
+                cart.addToCart(itemArrayList.get(selected));
+                Log.d("TAG", "onClick: "+cart.getTotalPrice());
+
+            }
+        }
     }
 }
