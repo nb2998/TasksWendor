@@ -12,4 +12,6 @@
     <string name="price">Price:</string>
     <string name="total_units">Total units:</string>
     <string name="left_units">Left units:</string>
+    <string name="navigation_drawer_open">Open Navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>

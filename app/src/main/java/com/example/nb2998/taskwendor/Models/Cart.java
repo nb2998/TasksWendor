@@ -46,6 +46,7 @@ public class Cart {
     public boolean removeFromCart(SingleItem item) {
         if (cartItemQuantityMap.containsKey(item) && cartItemQuantityMap.get(item) > 0) {
             cartItemQuantityMap.put(item, cartItemQuantityMap.get(item) - 1);
+            if(cartItemQuantityMap.get(item)==0) cartItemQuantityMap.remove(item);
             this.totalPrice -= item.getPrice();
             return true;
         }

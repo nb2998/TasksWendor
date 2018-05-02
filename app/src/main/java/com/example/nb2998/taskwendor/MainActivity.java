@@ -1,9 +1,13 @@
 package com.example.nb2998.taskwendor;
 
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.nb2998.taskwendor.Adapters.ItemsBelowAdapter;
 import com.example.nb2998.taskwendor.Database.DBHelper;
@@ -26,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter
 
     public ArrayList<SingleItem> itemsArrayList;
     DBHelper dbHelper;
-//    LinearLayout l_layout_above, l_layout_below;
-//    ScrollView scroll_view_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
