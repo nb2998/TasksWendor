@@ -5,20 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_swipe_left"
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="49dp"
+        android:layout_toStartOf="@+id/ll_item_details"
         android:adjustViewBounds="true"
-        android:contentDescription="swipe_left"
+        android:background="@android:color/black"
         android:scaleType="centerInside"
-        android:src="@drawable/backward"
-        android:layout_marginLeft="49dp"
-        android:layout_alignParentLeft="true" />
+        android:text="@string/left"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_toLeftOf="@+id/ll_item_details" />
 
     <LinearLayout
         android:id="@+id/ll_item_details"
@@ -89,18 +89,18 @@
 
     </LinearLayout>
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_swipe_right"
-        android:layout_width="50dp"
+        android:layout_width="30dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="49dp"
+        android:layout_toEndOf="@+id/ll_item_details"
         android:adjustViewBounds="true"
-        android:contentDescription="swipe_right"
+        android:background="@android:color/black"
         android:scaleType="centerInside"
-        android:src="@drawable/right_arrow"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="49dp" />
+        android:text="@string/right"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:layout_toRightOf="@+id/ll_item_details" />
 
 </RelativeLayout>

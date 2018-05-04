@@ -5,7 +5,6 @@
     <string name="items">Items</string>
     <string name="item_details">Item details</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_to_cart">Add to cart</string>
     <string name="name">Name:</string>
@@ -14,4 +13,10 @@
     <string name="left_units">Left units:</string>
     <string name="navigation_drawer_open">Open Navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="checkout">Checkout</string>
+    <string name="cart">Cart</string>
+    <string name="total_rs">Total: Rs.</string>
+    <string name="left"><![CDATA[<]]></string>
+    <string name="right"><![CDATA[>]]></string>
+    <string name="cart_is_empty">Cart is Empty</string>
 </resources>

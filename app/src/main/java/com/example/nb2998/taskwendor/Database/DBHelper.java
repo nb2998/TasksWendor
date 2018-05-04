@@ -20,6 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE = CREATE + TABLE_NAME + LBR +
+                COLUMN_ID + TYPE_INT_PK_AUTOIC + COMMA +
                 COLUMN_NAME + TYPE_TEXT + COMMA +
                 COLUMN_PRICE + TYPE_INTEGER + COMMA +
                 COLUMN_TOTAL_UNITS +TYPE_INTEGER + COMMA +

@@ -4,6 +4,7 @@ package com.example.nb2998.taskwendor.Fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.nb2998.taskwendor.Database.CartDBHelper;
 import com.example.nb2998.taskwendor.Database.DBHelper;
 import com.example.nb2998.taskwendor.Models.Cart;
 import com.example.nb2998.taskwendor.Models.SingleItem;
@@ -29,9 +31,10 @@ public class FragmentAbove extends Fragment implements View.OnClickListener {
     TextView tv_name_item_details, tv_price_item_details, tv_tot_item_details, tv_left_item_details;
     LinearLayout ll_item_details;
     Button btn_add_to_cart;
-    ImageButton btn_swipe_left, btn_swipe_right;
+    Button btn_swipe_left, btn_swipe_right;
     ArrayList<SingleItem> itemArrayList;
     int selected;
+    OnItemAdded callbackCartAddition;
 
     public FragmentAbove() {
         // Required empty public constructor
@@ -44,6 +47,9 @@ public class FragmentAbove extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment__above, container, false);
         itemArrayList = (new DBHelper(getContext())).readItemsFromDb();
+
+
+        callbackCartAddition = (OnItemAdded) getContext();
 
         tv_name_item_details = view.findViewById(R.id.tv_name_item_details);
         tv_price_item_details = view.findViewById(R.id.tv_price_item_details);
@@ -66,23 +72,24 @@ public class FragmentAbove extends Fragment implements View.OnClickListener {
         ll_item_details.setOnTouchListener(new OnSwipeTouchListener(getContext()) {
             @Override
             public void onSwipeLeft() {
-                Log.d("TAG", "onSwipeLeft: sel i "+selected);
-                if((selected+1)!=(itemArrayList.size()-1)) updateDetails((selected+1)%(itemArrayList.size()-1));
-                else updateDetails(selected+1);
+                Log.d("TAG", "onSwipeLeft: sel i " + selected);
+                if ((selected + 1) != (itemArrayList.size() - 1))
+                    updateDetails((selected + 1) % (itemArrayList.size() - 1));
+                else updateDetails(selected + 1);
             }
 
             @Override
             public void onSwipeRight() {
-                if(selected!=0) updateDetails((selected-1)%(itemArrayList.size()-1));
-                else updateDetails(itemArrayList.size()-1);
+                if (selected != 0) updateDetails((selected - 1) % (itemArrayList.size() - 1));
+                else updateDetails(itemArrayList.size() - 1);
             }
         });
         return view;
     }
 
-    public void updateDetails(int selected){
-        Log.d("TAG", "updateDetails: sel "+selected);
-        this.selected=selected;
+    public void updateDetails(int selected) {
+        Log.d("TAG", "updateDetails: sel " + selected);
+        this.selected = selected;
         tv_name_item_details.setText(new StringBuilder().append(getString(R.string.name)).append(itemArrayList.get(selected).getName()).toString());
         tv_price_item_details.setText(new StringBuilder().append(getString(R.string.price)).append(itemArrayList.get(selected).getPrice()).toString());
         tv_tot_item_details.setText(new StringBuilder().append(getString(R.string.total_units)).append(itemArrayList.get(selected).getTot_units()).toString());
@@ -91,20 +98,20 @@ public class FragmentAbove extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.btn_add_to_cart){
-            Cart cart = Cart.getInstance();
-            if(cart!=null){
-                Log.d("TAG", "onClick: "+cart.getTotalPrice());
-                cart.addToCart(itemArrayList.get(selected));
-                Log.d("TAG", "onClick: "+cart.getTotalPrice());
+        if (v.getId() == R.id.btn_add_to_cart) {
+            callbackCartAddition.updateCart(itemArrayList.get(selected));
 
-            }
-        } else if(v.getId()==R.id.btn_swipe_left){
-            Log.d("TAG", "onClick: "+selected);
-            if(selected!=(itemArrayList.size()-1)) updateDetails((selected+1)%(itemArrayList.size()-1));
-            else updateDetails(selected+1);
-        } else if(v.getId()==R.id.btn_swipe_right) {
-            updateDetails((selected+1)%(itemArrayList.size()-1));
+        } else if (v.getId() == R.id.btn_swipe_left) {
+            Log.d("TAG", "onClick: " + selected);
+            if (selected != (itemArrayList.size() - 1))
+                updateDetails((selected + 1) % (itemArrayList.size() - 1));
+            else updateDetails(selected + 1);
+        } else if (v.getId() == R.id.btn_swipe_right) {
+            updateDetails((selected + 1) % (itemArrayList.size() - 1));
         }
+    }
+
+    public interface OnItemAdded {
+        void updateCart(SingleItem itemToBeAdded);
     }
 }

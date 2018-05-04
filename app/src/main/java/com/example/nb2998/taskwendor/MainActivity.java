@@ -11,6 +11,7 @@ import android.widget.Toolbar;
 
 import com.example.nb2998.taskwendor.Adapters.ItemsBelowAdapter;
 import com.example.nb2998.taskwendor.Database.DBHelper;
+import com.example.nb2998.taskwendor.Fragments.CartFragment;
 import com.example.nb2998.taskwendor.Fragments.FragmentAbove;
 import com.example.nb2998.taskwendor.Fragments.FragmentBelow;
 import com.example.nb2998.taskwendor.Models.Items;
@@ -26,7 +27,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter.ItemClicked {
+public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter.ItemClicked, FragmentAbove.OnItemAdded {
 
     public ArrayList<SingleItem> itemsArrayList;
     DBHelper dbHelper;
@@ -35,9 +36,6 @@ public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        l_layout_above = findViewById(R.id.l_layout_above);
-//        l_layout_below = findViewById(R.id.l_layout_below);
 
         dbHelper = new DBHelper(this);
         itemsArrayList = dbHelper.readItemsFromDb();
@@ -82,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter
                 fragmentTransaction.add(R.id.container_above, fragmentAbove);
                 fragmentTransaction.commit();
 
-//                Bundle bundle = new Bundle();
-//                bundle.put
                 addFragments();
             }
         });
@@ -94,19 +90,29 @@ public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter
         android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         FragmentAbove fragmentAbove = new FragmentAbove();
-        fragmentTransaction.add(R.id.container_above, fragmentAbove);
+        fragmentTransaction.replace(R.id.container_above, fragmentAbove);
         fragmentTransaction.commit();
 
-        android.support.v4.app.FragmentManager fm1 = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction1 = fm.beginTransaction();
         FragmentBelow fragmentBelow = new FragmentBelow();
-        fragmentTransaction1.add(R.id.container_below, fragmentBelow);
+        fragmentTransaction1.replace(R.id.container_below, fragmentBelow);
         fragmentTransaction1.commit();
+
+        FragmentTransaction fragmentTransaction2 = fm.beginTransaction();
+        CartFragment cartFragment = new CartFragment();
+        fragmentTransaction2.replace(R.id.container_right, cartFragment);
+        fragmentTransaction2.commit();
     }
 
     @Override
     public void changeTextInFragmentAbove(int selected) {
         FragmentAbove fragmentAbove = (FragmentAbove) getSupportFragmentManager().findFragmentById(R.id.container_above);
         fragmentAbove.updateDetails(selected);
+    }
+
+    @Override
+    public void updateCart(SingleItem singleItem) {
+        CartFragment cartFragment = (CartFragment) getSupportFragmentManager().findFragmentById(R.id.container_right);
+        cartFragment.updateCart(singleItem);
     }
 }
