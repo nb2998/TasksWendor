@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.nb2998.taskwendor.Adapters.CartAdapter;
 import com.example.nb2998.taskwendor.Adapters.ItemsBelowAdapter;
 import com.example.nb2998.taskwendor.Database.DBHelper;
 import com.example.nb2998.taskwendor.Fragments.CartFragment;
@@ -27,7 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter.ItemClicked, FragmentAbove.OnItemAdded {
+public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter.ItemClicked, FragmentAbove.OnItemAdded,  CartAdapter.UpdateCartFragmentTotalPrice, CartFragment.UpdateLeftUnitsInFragAbove, CartAdapter.UpdateLeftUnitsInFragAbove {
 
     public ArrayList<SingleItem> itemsArrayList;
     DBHelper dbHelper;
@@ -114,5 +115,17 @@ public class MainActivity extends AppCompatActivity implements ItemsBelowAdapter
     public void updateCart(SingleItem singleItem) {
         CartFragment cartFragment = (CartFragment) getSupportFragmentManager().findFragmentById(R.id.container_right);
         cartFragment.updateCart(singleItem);
+    }
+
+    @Override
+    public void updatePrice() {
+        CartFragment cartFragment = (CartFragment) getSupportFragmentManager().findFragmentById(R.id.container_right);
+        cartFragment.updatePrice();
+    }
+
+    @Override
+    public void updateLeftUnits() {
+        FragmentAbove fragmentAbove = (FragmentAbove) getSupportFragmentManager().findFragmentById(R.id.container_above);
+        fragmentAbove.updateLeftUnits();
     }
 }

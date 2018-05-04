@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.util.Pair;
+import android.widget.Toast;
 
 import com.example.nb2998.taskwendor.Models.SingleItem;
 
@@ -47,6 +48,10 @@ public class CartDBHelper extends SQLiteOpenHelper {
         SingleItem item = singleItemIntegerPair.first;
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_NAME, singleItemIntegerPair.first.getName());
+        cv.put(COLUMN_PRICE, item.getPrice());
+        cv.put(COLUMN_TOTAL_UNITS, item.getTot_units());
+        cv.put(COLUMN_LEFT_UNITS, item.getLeft_units());
+        cv.put(COLUMN_IMAGE_URL, item.getImage_url());
         cv.put(COLUMN_QUANTITY, singleItemIntegerPair.second);
         sqLiteDatabase.insert(CART_TABLE_NAME, null, cv);
 
@@ -76,36 +81,40 @@ public class CartDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
     }
 
-    public void updateQtyOfItem(android.support.v4.util.Pair<SingleItem, Integer> itemToBeUpdated, int addOrDelete) { //add=0, delete=1
+    public boolean updateQtyOfItem(android.support.v4.util.Pair<SingleItem, Integer> itemToBeUpdated, int addOrDelete) { //add=0, delete=1
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_NAME, itemToBeUpdated.first.getName());
-        if (addOrDelete == ADD) cv.put(COLUMN_QUANTITY, itemToBeUpdated.second + 1);
-        else if (addOrDelete == DELETE) {
-            if((itemToBeUpdated.second - 1) > 0) cv.put(COLUMN_QUANTITY, itemToBeUpdated.second - 1);
+        if (addOrDelete == ADD) {
+            if ((itemToBeUpdated.second + 1) <= itemToBeUpdated.first.getTot_units())
+                cv.put(COLUMN_QUANTITY, itemToBeUpdated.second + 1);
+            else return false;
+        } else if (addOrDelete == DELETE) {
+            if ((itemToBeUpdated.second - 1) > 0)
+                cv.put(COLUMN_QUANTITY, itemToBeUpdated.second - 1);
             else {
                 removeItemsFromDb(itemToBeUpdated);
-                return;
+                return true;
             }
-
         }
         sqLiteDatabase.update(CART_TABLE_NAME, cv, COLUMN_NAME + "=?", new String[]{itemToBeUpdated.first.getName()});
         sqLiteDatabase.close();
+        return true;
     }
 
     public android.support.v4.util.Pair<SingleItem, Integer> existsInDb(SingleItem singleItem) {
         SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-        Cursor cursor = sqLiteDatabase.query(CART_TABLE_NAME, null, COLUMN_NAME+" =?" , new String[] {singleItem.getName()}, null, null, null);
+        Cursor cursor = sqLiteDatabase.query(CART_TABLE_NAME, null, COLUMN_NAME + " =?", new String[]{singleItem.getName()}, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
             // TODO: 04/05/18 New Item increase quantity
             cursor.moveToFirst();
-                SingleItem item = new SingleItem(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_UNITS)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_LEFT_UNITS)),
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE)));
-                return (new android.support.v4.util.Pair<>(singleItem,
-                        cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY))));
+            SingleItem item = new SingleItem(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)),
+                    cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL)),
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_UNITS)),
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_LEFT_UNITS)),
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_PRICE)));
+            return (new android.support.v4.util.Pair<>(singleItem,
+                    cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY))));
         }
         return null;
     }

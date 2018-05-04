@@ -1,6 +1,8 @@
 package com.example.nb2998.taskwendor.Fragments;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
@@ -12,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nb2998.taskwendor.Adapters.CartAdapter;
 import com.example.nb2998.taskwendor.Database.CartDBHelper;
+import com.example.nb2998.taskwendor.Database.DBHelper;
 import com.example.nb2998.taskwendor.Models.Cart;
 import com.example.nb2998.taskwendor.Models.SingleItem;
 import com.example.nb2998.taskwendor.R;
@@ -31,8 +35,8 @@ public class CartFragment extends Fragment {
     Button btn_cart_checkout;
     ArrayList<Pair<SingleItem, Integer>> cartItemArrayList;
     CartDBHelper cartDBHelper;
-    Cart cart;
     CartAdapter cartAdapter;
+    UpdateLeftUnitsInFragAbove callbackLeftUnits;
 
     public CartFragment() {
         // Required empty public constructor
@@ -49,16 +53,25 @@ public class CartFragment extends Fragment {
         tv_cart_total = view.findViewById(R.id.tv_cart_total);
         btn_cart_checkout = view.findViewById(R.id.btn_cart_checkout);
         cartDBHelper = new CartDBHelper(getContext());
-        cart = Cart.getInstance();
+        callbackLeftUnits = (UpdateLeftUnitsInFragAbove) getContext();
 
         cartItemArrayList = cartDBHelper.readItemsFromDb();
-        if(cartItemArrayList.size()==0) tv_cart_total.setText(R.string.cart_is_empty);
+        if (cartItemArrayList.size() == 0) tv_cart_total.setText(R.string.cart_is_empty);
 
         rec_view_cart.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         cartAdapter = new CartAdapter(cartItemArrayList, getContext());
         rec_view_cart.setAdapter(cartAdapter);
 
-        tv_cart_total.setText(new StringBuilder().append(getContext().getResources().getString(R.string.total_rs)).append(cart.getTotalPrice()).toString());
+        int price = 0;
+        for(int i=0; i<cartItemArrayList.size(); i++) {
+            if(cartItemArrayList.get(i)!=null && cartItemArrayList.get(i).second!=null) price+=cartItemArrayList.get(i).second;
+        }
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(getString(R.string.total_price_shared_preferences), price);
+        editor.commit();
+
+        tv_cart_total.setText(new StringBuilder().append(getContext().getResources().getString(R.string.total_rs)).append(sharedPreferences.getFloat(getString(R.string.total_price_shared_preferences), 0)));
 
         btn_cart_checkout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,22 +83,39 @@ public class CartFragment extends Fragment {
         return view;
     }
 
-    public void updateCart(SingleItem itemToBeAdded){
+    public void updateCart(SingleItem itemToBeAdded) {
+        (new DBHelper(getContext())).updateLeftUnits(itemToBeAdded, DBHelper.SUBTRACT);
         Pair<SingleItem, Integer> itemExists = cartDBHelper.existsInDb(itemToBeAdded);
-        if(itemExists!=null) {
-            cartDBHelper.updateQtyOfItem(itemExists, CartDBHelper.ADD);
-            cartItemArrayList.remove(itemExists);
-            cartItemArrayList.add(new Pair<>(itemExists.first, itemExists.second));
-            Log.d("TAG", "updateCart: ");
+        if (itemExists != null) {
+            if(cartDBHelper.updateQtyOfItem(itemExists, CartDBHelper.ADD)) {
+                cartItemArrayList.clear();
+                cartItemArrayList.addAll(cartDBHelper.readItemsFromDb());
+            } else{
+                Toast.makeText(getContext(), "No more items can be added", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            cartDBHelper.insertItemsIntoDb(new Pair<>(itemToBeAdded, 1));
+            cartItemArrayList.clear();
+            cartItemArrayList.addAll(cartDBHelper.readItemsFromDb());
         }
-        else {
-            itemExists = new Pair<>(itemToBeAdded, 1);
-            cartDBHelper.insertItemsIntoDb(itemExists);
-            cartItemArrayList.add(itemExists);
-            Log.d("TAG", "updateCart: else");
-        }
-        Log.d("TAG", "updateCart: out "+cartItemArrayList.size());
+
+        float initial_price = getContext().getSharedPreferences(String.valueOf(R.string.shared_pref), Context.MODE_PRIVATE).getFloat(String.valueOf(R.string.total_price_shared_preferences), 0);
+        SharedPreferences sp = getContext().getSharedPreferences(String.valueOf(R.string.shared_pref), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putFloat(getString(R.string.total_price_shared_preferences), initial_price+itemToBeAdded.getPrice());
+        editor.commit();
+        updatePrice();
+        callbackLeftUnits.updateLeftUnits();
+
         cartAdapter.notifyDataSetChanged();
     }
 
+    public void updatePrice() {
+        // TODO: 04/05/18 Price not updating
+        tv_cart_total.setText(new StringBuilder().append(getContext().getResources().getString(R.string.total_rs)).append(getContext().getSharedPreferences(getString(R.string.shared_pref), Context.MODE_PRIVATE).getFloat(getString(R.string.total_price_shared_preferences), 0)));
+    }
+
+    public interface UpdateLeftUnitsInFragAbove {
+        void updateLeftUnits();
+    }
 }

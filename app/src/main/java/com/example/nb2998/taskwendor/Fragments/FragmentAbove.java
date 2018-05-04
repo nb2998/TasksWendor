@@ -111,6 +111,11 @@ public class FragmentAbove extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void updateLeftUnits() {
+        itemArrayList.add(selected, (new DBHelper(getContext()).readItemsFromDb().get(selected)));
+        tv_left_item_details.setText(new StringBuilder().append(getString(R.string.left_units)).append(itemArrayList.get(selected).getLeft_units()).toString());
+    }
+
     public interface OnItemAdded {
         void updateCart(SingleItem itemToBeAdded);
     }

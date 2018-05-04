@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
+    //not used yet
 
     private static Cart cartInstance;
     private static final int INITIAL_TOTAL_PRICE = 0;
 
-//    private HashMap<SingleItem, Integer> cartItemQuantityMap;
     private List<Pair<SingleItem, Integer>> cartItemPairList;
     private double totalPrice;
 

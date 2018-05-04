@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import static com.example.nb2998.taskwendor.Database.DBContract.*;
 
 public class DBHelper extends SQLiteOpenHelper {
+
+    public static final int ADD = 1;
+    public static final int SUBTRACT = -1;
+
     public DBHelper(Context context) {
         super(context, TABLE_NAME, null, 1);
     }
@@ -23,8 +27,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_ID + TYPE_INT_PK_AUTOIC + COMMA +
                 COLUMN_NAME + TYPE_TEXT + COMMA +
                 COLUMN_PRICE + TYPE_INTEGER + COMMA +
-                COLUMN_TOTAL_UNITS +TYPE_INTEGER + COMMA +
-                COLUMN_LEFT_UNITS +TYPE_INTEGER +COMMA +
+                COLUMN_TOTAL_UNITS + TYPE_INTEGER + COMMA +
+                COLUMN_LEFT_UNITS + TYPE_INTEGER + COMMA +
                 COLUMN_IMAGE_URL + TYPE_TEXT +
                 RBR + TERMINATE;
         db.execSQL(CREATE_TABLE);
@@ -37,7 +41,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertItemsIntoDb(ArrayList<SingleItem> itemArrayList) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
-        for(int i=0; i<itemArrayList.size(); i++) {
+        for (int i = 0; i < itemArrayList.size(); i++) {
             SingleItem item = itemArrayList.get(i);
             ContentValues cv = new ContentValues();
             cv.put(COLUMN_NAME, item.getName());
@@ -62,5 +66,18 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         sqLiteDatabase.close();
         return itemArrayList;
+    }
+
+    public boolean updateLeftUnits(SingleItem singleItem, int addOrSubtract) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        if (addOrSubtract == ADD && singleItem.getLeft_units() + 1 <= singleItem.getTot_units()) {
+            cv.put(COLUMN_LEFT_UNITS, singleItem.getLeft_units() + 1);
+            return true;
+        } else if (addOrSubtract == SUBTRACT && singleItem.getLeft_units() - 1 >= 0) {
+            cv.put(COLUMN_LEFT_UNITS, singleItem.getLeft_units() - 1);
+            return true;
+        }
+        return false;
     }
 }

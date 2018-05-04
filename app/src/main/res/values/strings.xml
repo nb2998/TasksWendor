@@ -19,4 +19,6 @@
     <string name="left"><![CDATA[<]]></string>
     <string name="right"><![CDATA[>]]></string>
     <string name="cart_is_empty">Cart is Empty</string>
+    <string name="total_price_shared_preferences">total_price_shared_preferences</string>
+    <string name="shared_pref">shared_pref</string>
 </resources>
